@@ -52,8 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (responses.statusCode == 200) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('access_token', token);
-        await prefs.setString('user_id', datas['user_id'].toString());
+        await prefs.setString('user_ids', datas['user_id']);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => DashboardScreen()),

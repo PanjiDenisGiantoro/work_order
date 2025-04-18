@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity_plus/connectivity_plus.dart' as connectivity;
 import 'package:testing/list_part_screen.dart';
 import 'package:testing/list_wo_screen.dart';
@@ -16,17 +17,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _isOnline = true; // Status koneksi internet
   StreamSubscription<connectivity.ConnectivityResult>? _connectivitySubscription;
 
+  String _accessToken = "Loading..."; // Variabel untuk token
+
   // Daftar widget untuk setiap menu
   final List<Widget> _pages = [
     RequestScreen(), // Halaman Request
     ListWoScreen(), // Halaman List WO
-ListPartScreen(),
-    ProfileScreen(),
+    ListPartScreen(), // Halaman List Part
+    ProfileScreen(), // Halaman Profile
   ];
 
   @override
   void initState() {
     super.initState();
+    _loadUserData(); // Mengambil data pengguna
+
     _checkConnectivity(); // Mengecek status koneksi saat aplikasi dimulai
 
     // Memonitor perubahan status koneksi secara real-time
@@ -37,6 +42,20 @@ ListPartScreen(),
           });
         });
   }
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _accessToken = prefs.getString('access_token') ?? "No Token"; // Ambil token
+    });
+  }
+
+
+  Future<String?> _getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access_token'); // Ambil token dari SharedPreferences
+  }
+
+
 
   Future<void> _checkConnectivity() async {
     var connectivityResult = await connectivity.Connectivity().checkConnectivity();
@@ -44,6 +63,7 @@ ListPartScreen(),
       _isOnline = (connectivityResult != connectivity.ConnectivityResult.none);
     });
   }
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -61,7 +81,16 @@ ListPartScreen(),
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dashboard"),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Dashboard"),
+            Text(
+              "User:  $_accessToken", // Tampilkan token
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+            ),
+          ],
+        ),
         actions: [
           Icon(
             _isOnline ? Icons.wifi : Icons.wifi_off,

@@ -47,7 +47,7 @@ dependencies:
   printing: ^5.14.2
   share_plus: ^10.1.4
   permission_handler: ^11.4.0
-  flutter_secure_storage: ^9.2.4
+  image_gallery_saver_plus: ^3.0.5
 
 
 

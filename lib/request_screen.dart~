@@ -191,7 +191,7 @@ class _RequestScreenState extends State<RequestScreen> {
 
             SnackBar(
                 // content: Text("Request berhasil dikirim. File: $fileNames")),
-                content: Text("Request berhasil dikirim ke server")),
+                content: Text("Request berhasil dikirim ke server:")),
           );
         } else {
           throw Exception("Gagal mengirim data: ${response.body}");
